@@ -1,0 +1,19 @@
+<nav class="justify-content-between custom-header">
+    @if (isLoggedIn()) {
+        <div class="user-profile">
+            <div class="boxed-image">
+                <img [src]="user()?.profileImgUrl || 'empty-profile.png'" >
+            </div>
+            <div>
+                {{user()?.userName}}
+            </div>
+            <button class="btn btn-outline-warning my-2 my-sm-0 mx-4" (click)="onLogout()">Logout</button>
+        </div>
+    }
+    @else {
+        <form class="form-inline">
+            <a class="btn btn-outline-primary my-2 my-sm-0 mx-4" routerLink="/auth/signIn">Sign In</a>
+            <a class="btn btn-outline-success my-2 my-sm-0" routerLink="/auth/signUp">Sign Up</a>
+        </form>
+    }
+</nav>
