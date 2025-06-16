@@ -8,5 +8,7 @@
         protected OperationResult() { }
         public bool Succeeded { get; protected set; }
         public bool Failed { get; protected set; }
+
+        public string Message {  get; set; }
     }
 }

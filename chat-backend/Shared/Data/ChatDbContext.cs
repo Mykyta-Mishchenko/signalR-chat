@@ -13,6 +13,10 @@ namespace chat_backend.Shared.Data
         public DbSet<UserProfile> UsersProfile { get; set; }
         public DbSet<RefreshSession> RefreshSessions { get; set; }
 
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<ChatParticipant> ChatParticipants { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
