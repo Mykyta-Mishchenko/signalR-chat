@@ -7,5 +7,7 @@ namespace chat_backend.Modules.OnlineChat.Interfaces.Services
     {
         Task<List<ChatParticipantDto>> GetUsersByNameOrEmailAsync(string request);
         Task<User?> GetUserByIdAsync(int userId);
+        Task SetUserOnlineAsync(int userId);
+        Task SetUserOfflineAsync(int userId);
     }
 }

@@ -3,8 +3,9 @@
 namespace chat_backend.Modules.OnlineChat.Interfaces.Repositories
 {
     public interface IChatRepository
-    { 
-        Task<Chat?> CreateChatWithParticipantsAsync(string chatName, List<int> participantsIds);
+    {
+        Task<List<Chat>> GetUserChatsAsync(int userId);
+        Task<Chat?> CreateChatWithParticipantsAsync(Chat chat, List<int> participantsIds);
         Task<List<Chat>> GetUserChatsWithParticipantsAsync(int userId);
         Task<Chat?> GetChatInfoWithParticipantsAsync(int chatId);
         Task<ChatParticipant?> AddParticipantToChatAsync(int chatId, int participantId);

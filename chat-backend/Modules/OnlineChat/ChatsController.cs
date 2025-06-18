@@ -1,5 +1,8 @@
 ﻿using chat_backend.Modules.OnlineChat.DTOs;
 using chat_backend.Modules.OnlineChat.Interfaces.Services;
+using chat_backend.Shared.Data.DataModels;
+using chat_backend.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
@@ -9,6 +12,7 @@ namespace chat_backend.Modules.OnlineChat
 {
     [Route("api/chats")]
     [ApiController]
+    [Authorize]
     public class ChatsController : ControllerBase
     {
         private readonly IChatService _chatService;
@@ -40,9 +44,15 @@ namespace chat_backend.Modules.OnlineChat
         [HttpPost("new/personal")]
         public async Task<IActionResult> CreatePersonalChat(CreatePersonalChatRequestDto request)
         {
+            var newChat = new Chat
+            {
+                Name = "",
+                ChatType = ChatType.Personal
+            };
+
             var chatInfo = await _chatService
                 .CreateChatWithParticipantsAsync(
-                    request.SenderId, "", 
+                    request.SenderId, newChat , 
                     new List<int> { request.SenderId, request.RecipientId });
 
             if(chatInfo is null)
@@ -55,7 +65,7 @@ namespace chat_backend.Modules.OnlineChat
             return Ok(chatInfo);
         }
 
-        [HttpGet("messasges/chat/{chatId:int}")]
+        [HttpGet("messages/chat/{chatId:int}")]
         public async Task<IActionResult> GetChatMessages(int chatId)
         {
             var messages = await _messageService.GetChatMessagesAsync(chatId);

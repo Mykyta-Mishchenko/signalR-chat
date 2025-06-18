@@ -5,12 +5,47 @@
 }
 @else {
     <div class="d-flex chat-content flex-column justify-content-end align-items-center p-2">
+        <div class="d-flex text-center">
+            <h5>{{chat()?.name}}</h5>
+        </div>
         @if(messages().length == 0){
             <div class="no-content mb-5">
                 No chat messages yet.
             </div>
         }
-        <div class="input-group">
+        
+        @if(hasUnreadMessages()){
+            <div class="unread-indicator" (click)="scrollToFirstUnread()">
+                <i class="bi bi-arrow-down"></i>
+                {{getUnreadCount()}} unread messages
+            </div>
+        }
+
+        <div class="chat-messages" #chatMessagesContainer>
+            @for (message of messages(); track message.timeStamp) {
+                <div class="message" 
+                    [class]="getMessageClass(message.senderId)"
+                    [id]="'message-' + message.id"
+                    inViewport
+                    (inViewportAction)="onMessageVisible($event, message)">
+                    
+                    @if(isFirstUnreadMessage(message)){
+                        <div class="unread-separator">
+                            <span>New messages</span>
+                        </div>
+                    }
+                    
+                    <div>{{message.content}}</div>
+                    <div class="message-time">
+                        @if(message.isRead && isMessageMine(message)){<i class="bi bi-check-all"></i>}
+                        @else if(isMessageMine(message)) {<i class="bi bi-check"></i>}
+                        {{formatTimestamp(message.timeStamp)}}
+                    </div>
+                </div>
+            }
+        </div>  
+
+        <div class="input-group mt-2">
             <input type="text" class="form-control" placeholder="Message" #chatMessage 
                 (keyup.enter)="onSendMessage(chatMessage.value); chatMessage.value=''">
             <div class="input-group-append">
@@ -22,5 +57,3 @@
         </div>
     </div>
 }
-
-

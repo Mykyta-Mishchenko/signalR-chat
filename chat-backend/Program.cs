@@ -1,5 +1,7 @@
 using chat_backend.AppExtensionMethods;
+using chat_backend.Modules.OnlineChat;
 using chat_backend.Shared.Data;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using monopoly_backend.AppExtensionMethods;
 
@@ -33,6 +35,8 @@ builder.Services.AddApplicationRepositories();
 builder.Services.AddValidators();
 builder.Services.AddApplicationMappers();
 
+builder.Services.AddSingleton<IUserIdProvider, NameIdentifierUserIdProvider>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -52,5 +56,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatsHub>("/chatHub").RequireAuthorization();
+
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"Auth Header: {context.Request.Headers["Authorization"]}");
+    await next();
+});
 
 app.Run();

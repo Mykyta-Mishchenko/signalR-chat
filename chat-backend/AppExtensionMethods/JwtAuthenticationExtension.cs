@@ -9,9 +9,14 @@ namespace chat_backend.AppExtensionMethods
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
+                options.UseSecurityTokenValidators = true;
                 options.IncludeErrorDetails = true;
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
@@ -25,6 +30,29 @@ namespace chat_backend.AppExtensionMethods
                     ValidAudience = configuration["JwtSettings:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"])),
                     RoleClaimType = ClaimTypes.Role
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/chatHub")))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                     OnAuthenticationFailed = context =>
+                     {
+                         var token = context.Request.Headers["Authorization"];
+                         Console.WriteLine(token);
+                         Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                         return Task.CompletedTask;
+                     }
                 };
             });
 

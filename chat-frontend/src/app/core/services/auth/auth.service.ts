@@ -93,7 +93,7 @@ export class AuthService{
       const payload: any = jwtDecode(token);
 
       return {
-        userId: payload.nameid,
+        userId: Number(payload.nameid),
         userName: payload.unique_name,
         role: payload.role,
         profileImgUrl: null

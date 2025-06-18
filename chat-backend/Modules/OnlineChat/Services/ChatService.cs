@@ -3,7 +3,9 @@ using chat_backend.Modules.OnlineChat.DTOs;
 using chat_backend.Modules.OnlineChat.Interfaces.Repositories;
 using chat_backend.Modules.OnlineChat.Interfaces.Services;
 using chat_backend.Shared.Data.DataModels;
+using chat_backend.Shared.Models;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 using System;
 
 namespace chat_backend.Modules.OnlineChat.Services
@@ -23,24 +25,22 @@ namespace chat_backend.Modules.OnlineChat.Services
             _mapper = mapper;
         }
 
-        public async Task<ChatInfoDto?> CreateChatWithParticipantsAsync(int creatorId, string name, List<int> participantsIds)
+        public async Task<ChatInfoDto?> CreateChatWithParticipantsAsync(int creatorId, Chat chat, List<int> participantsIds)
         {
-            var chat = await _chatRepository.CreateChatWithParticipantsAsync(name, participantsIds);
-            if(chat is null)
+            var dbChat = await _chatRepository.CreateChatWithParticipantsAsync(chat, participantsIds);
+            if(dbChat is null)
             {
                 return null;
             }
 
-            chat = await _chatRepository.GetChatInfoWithParticipantsAsync(chat.Id);
+            dbChat = await _chatRepository.GetChatInfoWithParticipantsAsync(dbChat.Id);
 
-            if (chat is null)
+            if (dbChat is null)
             {
                 return null;
             }
 
-            chat.Name = GetChatName(chat, creatorId);
-            await SetChatOwnerAsync(chat.Id, creatorId);
-
+            chat.Name = GetChatName(dbChat, creatorId);
             return _mapper.Map<ChatInfoDto>(chat);
         }
 
@@ -49,6 +49,11 @@ namespace chat_backend.Modules.OnlineChat.Services
             var chatInfo = await _chatRepository.GetChatInfoWithParticipantsAsync(chatId);
 
             return _mapper.Map<ChatInfoDto?>(chatInfo);
+        }
+
+        public async Task<List<Chat>> GetUserChatsAsync(int userId)
+        {
+            return await _chatRepository.GetUserChatsAsync(userId);
         }
 
         public async Task<List<ChatInfoDto>> GetUserChatsWithParticipantsAsync(int userId)
@@ -65,10 +70,11 @@ namespace chat_backend.Modules.OnlineChat.Services
                 {
                     Id = chat.Id,
                     Name = GetChatName(chat, userId),
+                    ChatType = chat.ChatType,
                     Participants = _mapper.Map<List<ChatParticipantDto>>(chat.Participants),
                     LastMessage = lastMessage?.Content ?? "",
                     LastMessageTimestamp = lastMessage?.TimeStamp ?? DateTime.MinValue,
-                    UnreadMessagesCount = unreadedMessages.Count
+                    UnreadMessagesCount = unreadedMessages.Where(m => m.SenderId != userId).ToList().Count
                 };
 
                 chatsInfo.Add(chatInfo);
@@ -84,7 +90,7 @@ namespace chat_backend.Modules.OnlineChat.Services
 
         private string GetChatName(Chat chatWithParticipants, int userId)
         {
-            if(chatWithParticipants.Participants.Count == 2)
+            if(chatWithParticipants.ChatType == ChatType.Personal)
             {
                 return chatWithParticipants.Participants.FirstOrDefault(p => p.Id != userId)?.User.UserName ?? "";
             }

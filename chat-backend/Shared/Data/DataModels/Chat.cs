@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using chat_backend.Shared.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace chat_backend.Shared.Data.DataModels
 {
@@ -7,6 +8,7 @@ namespace chat_backend.Shared.Data.DataModels
         [BindNever]
         public int Id { get; set; }
         public string Name { get; set; }
+        public ChatType ChatType { get; set; }
 
         public ICollection<Message> Messages { get; set; }
         public ICollection<ChatParticipant> Participants { get; set; }

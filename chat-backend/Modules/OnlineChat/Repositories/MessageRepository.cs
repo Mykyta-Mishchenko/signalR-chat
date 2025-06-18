@@ -29,7 +29,7 @@ namespace chat_backend.Modules.OnlineChat.Repositories
         public async Task<Message?> GetLastChatMessageAsync(int chatId)
         {
             return await _dbContext.Messages
-                .Where(m=>m.Chat.Id == chatId)
+                .Where(m => m.Chat.Id == chatId)
                 .OrderByDescending(m => m.TimeStamp)
                 .FirstOrDefaultAsync();
         }

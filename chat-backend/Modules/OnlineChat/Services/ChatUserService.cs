@@ -9,11 +9,14 @@ namespace chat_backend.Modules.OnlineChat.Services
     public class ChatUserService : IChatUserService
     {
         private readonly IChatUserRepository _userRepository;
+        private readonly IOnlineUsersRepository _onlineUsersRepository;
         private readonly IMapper _mapper;
         public ChatUserService(
             IChatUserRepository userRepository,
+            IOnlineUsersRepository onlineUsersRepository,
             IMapper mapper)
         {
+            _onlineUsersRepository = onlineUsersRepository;
             _userRepository = userRepository;
             _mapper = mapper;
         }
@@ -27,6 +30,16 @@ namespace chat_backend.Modules.OnlineChat.Services
         {
             var users = await _userRepository.GetUsersByNameOrEmail(request);
             return _mapper.Map<List<ChatParticipantDto>>(users);
+        }
+
+        public async Task SetUserOfflineAsync(int userId)
+        {
+            await _onlineUsersRepository.SetUserOfflineAsync(userId);
+        }
+
+        public async Task SetUserOnlineAsync(int userId)
+        {
+            await _onlineUsersRepository.SetUserOnlineAsync(userId);
         }
     }
 }

@@ -43,13 +43,8 @@ namespace chat_backend.Modules.OnlineChat.Repositories
             return newChatParticipant;
         }
 
-        public async Task<Chat?> CreateChatWithParticipantsAsync(string chatName, List<int> participantsIds)
+        public async Task<Chat?> CreateChatWithParticipantsAsync(Chat chat, List<int> participantsIds)
         {
-            var chat = new Chat
-            {
-                Name = chatName 
-            };
-
             await _dbContext.Chats.AddAsync(chat);
             await _dbContext.SaveChangesAsync();
 
@@ -67,6 +62,11 @@ namespace chat_backend.Modules.OnlineChat.Repositories
                 .Include(c => c.Participants)
                     .ThenInclude(c => c.User)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Chat>> GetUserChatsAsync(int userId)
+        {
+            return await _dbContext.Chats.Where(c => c.Participants.Any(p => p.Id == userId)).ToListAsync();
         }
 
         public async Task<List<Chat>> GetUserChatsWithParticipantsAsync(int userId)
