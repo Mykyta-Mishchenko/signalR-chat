@@ -1,4 +1,4 @@
-﻿namespace chat_backend.Modules.OnlineChat.Interfaces
+﻿namespace chat_backend.Modules.OnlineChat.Interfaces.Repositories
 {
     public interface IOnlineUsersRepository
     {

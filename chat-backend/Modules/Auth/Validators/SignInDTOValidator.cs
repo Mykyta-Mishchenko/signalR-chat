@@ -1,9 +1,9 @@
 ﻿using chat_backend.Modules.Auth.DTO;
 using FluentValidation;
 
-namespace chat_backend.Modules.Auth.Models.Validators
+namespace chat_backend.Modules.Auth.Validators
 {
-    public class SignInDTOValidator : AbstractValidator<SignInDTO>
+    public class SignInDTOValidator : AbstractValidator<SignInDto>
     {
         public SignInDTOValidator()
         {

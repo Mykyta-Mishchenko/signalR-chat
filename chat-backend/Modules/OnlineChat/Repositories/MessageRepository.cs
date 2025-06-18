@@ -1,4 +1,4 @@
-﻿using chat_backend.Modules.OnlineChat.Interfaces;
+﻿using chat_backend.Modules.OnlineChat.Interfaces.Repositories;
 using chat_backend.Shared.Data;
 using chat_backend.Shared.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
@@ -19,12 +19,26 @@ namespace chat_backend.Modules.OnlineChat.Repositories
             return message;
         }
 
+        public async Task<List<Message>> GetChatMessagesAsync(int chatId)
+        {
+            return await _dbContext.Messages.Where(m => m.ChatId == chatId)
+                .OrderBy(m=>m.TimeStamp)
+                .ToListAsync();
+        }
+
         public async Task<Message?> GetLastChatMessageAsync(int chatId)
         {
             return await _dbContext.Messages
                 .Where(m=>m.Chat.Id == chatId)
                 .OrderByDescending(m => m.TimeStamp)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Message>> GetUnreadedChatMessagesAsync(int chatId)
+        {
+            return await _dbContext.Messages
+                .Where(m => m.ChatId == chatId && m.IsRead == false)
+                .ToListAsync();
         }
 
         public async Task<Message?> SetMessageAsReadAsync(int messageId)

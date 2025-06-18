@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using chat_backend.Shared.Data;
 
@@ -11,9 +12,11 @@ using chat_backend.Shared.Data;
 namespace chat_backend.Migrations
 {
     [DbContext(typeof(ChatDbContext))]
-    partial class ChatDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250617204812_AddedOwnerIdToChatsTable")]
+    partial class AddedOwnerIdToChatsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,12 @@ namespace chat_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Chats", (string)null);
                 });
@@ -49,9 +57,6 @@ namespace chat_backend.Migrations
 
                     b.Property<int>("ChatId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsOwner")
-                        .HasColumnType("bit");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -212,6 +217,17 @@ namespace chat_backend.Migrations
                     b.ToTable("UsersRoles");
                 });
 
+            modelBuilder.Entity("chat_backend.Shared.Data.DataModels.Chat", b =>
+                {
+                    b.HasOne("chat_backend.Shared.Data.DataModels.User", "Owner")
+                        .WithMany("Chats")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("chat_backend.Shared.Data.DataModels.ChatParticipant", b =>
                 {
                     b.HasOne("chat_backend.Shared.Data.DataModels.Chat", "Chat")
@@ -306,6 +322,8 @@ namespace chat_backend.Migrations
             modelBuilder.Entity("chat_backend.Shared.Data.DataModels.User", b =>
                 {
                     b.Navigation("ChatParticipants");
+
+                    b.Navigation("Chats");
 
                     b.Navigation("Messages");
 

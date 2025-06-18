@@ -1,6 +1,6 @@
 ﻿namespace chat_backend.Modules.Auth.DTO
 {
-    public class SignUpDTO
+    public class SignUpDto
     {
         public string UserName { get; set; }
         public string Email { get; set; }

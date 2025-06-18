@@ -26,7 +26,7 @@ namespace chat_backend.Modules.Auth
             _tokenService = tokenService;
         }
         [HttpPost("signIn")]
-        public async Task<IActionResult> SignIn(SignInDTO request)
+        public async Task<IActionResult> SignIn(SignInDto request)
         {
             if (!ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace chat_backend.Modules.Auth
         }
 
         [HttpPost("signUp")]
-        public async Task<IActionResult> SignUp(SignUpDTO request)
+        public async Task<IActionResult> SignUp(SignUpDto request)
         {
             if (!ModelState.IsValid || request.Password != request.ConfirmedPassword)
             {

@@ -1,7 +1,10 @@
-﻿namespace chat_backend.Shared.Data.DataModels
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace chat_backend.Shared.Data.DataModels
 {
     public class Message
     {
+        [BindNever]
         public int Id { get; set; }
         public int SenderId { get; set; }
         public int ChatId { get; set; }

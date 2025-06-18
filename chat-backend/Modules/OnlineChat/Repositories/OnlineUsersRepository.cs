@@ -1,13 +1,14 @@
-﻿using chat_backend.Modules.OnlineChat.Interfaces;
+﻿using chat_backend.Modules.OnlineChat.Interfaces.Repositories;
 using chat_backend.Shared.Data;
+using chat_backend.Shared.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace chat_backend.Modules.OnlineChat.Repositories
 {
-    public class OnlineUsersService : IOnlineUsersRepository
+    public class OnlineUsersRepository : IOnlineUsersRepository
     {
         public ChatDbContext _dbContext { get; set; }
-        public OnlineUsersService(ChatDbContext dbContext)
+        public OnlineUsersRepository(ChatDbContext dbContext)
         {
             _dbContext = dbContext;
         }

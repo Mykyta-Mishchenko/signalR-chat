@@ -1,0 +1,20 @@
+<div class="d-flex flex-column">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Recipient's username/email" #userFindInput>
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" (click)="onFindUser(userFindInput.value)">
+                <i class="bi bi-search"></i> Find
+            </button>
+        </div>
+    </div>
+    @for (user of foundedUsers(); track $index) {
+        <app-new-chat-info [user]="user" [isChatFriend]="isChatFriend(user.id)"></app-new-chat-info>
+    }
+    @if(foundedUsers().length > 0){
+        <div class="mt-3 chat-info"></div>
+    }
+
+    @for (chat of chatList(); track $index) {
+        <app-chat-info [chat]="chat"></app-chat-info>
+    }
+</div>

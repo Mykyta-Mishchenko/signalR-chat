@@ -1,4 +1,4 @@
-﻿using chat_backend.Modules.Auth.Models.Validators;
+﻿using chat_backend.Modules.Auth.Validators;
 using chat_backend.Modules.Profile;
 using FluentValidation;
 using FluentValidation.AspNetCore;

@@ -7,6 +7,7 @@ namespace chat_backend.AppExtensionMethods
         public static void AddApplicationMappers(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(UserMappingProfile));
+            services.AddAutoMapper(typeof(ChatMappingProfile));
         }
     }
 }

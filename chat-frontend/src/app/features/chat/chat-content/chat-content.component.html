@@ -1,0 +1,26 @@
+@if(chat() == null){
+    <div class="no-content">
+        No chat selected yet.
+    </div>
+}
+@else {
+    <div class="d-flex chat-content flex-column justify-content-end align-items-center p-2">
+        @if(messages().length == 0){
+            <div class="no-content mb-5">
+                No chat messages yet.
+            </div>
+        }
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Message" #chatMessage 
+                (keyup.enter)="onSendMessage(chatMessage.value); chatMessage.value=''">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" 
+                    (click)="onSendMessage(chatMessage.value); chatMessage.value=''" >
+                    <i class="bi bi-send"></i> Send
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+

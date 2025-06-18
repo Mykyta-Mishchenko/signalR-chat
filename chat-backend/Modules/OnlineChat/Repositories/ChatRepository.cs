@@ -1,4 +1,4 @@
-﻿using chat_backend.Modules.OnlineChat.Interfaces;
+﻿using chat_backend.Modules.OnlineChat.Interfaces.Repositories;
 using chat_backend.Shared.Data;
 using chat_backend.Shared.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +47,7 @@ namespace chat_backend.Modules.OnlineChat.Repositories
         {
             var chat = new Chat
             {
-                Name = chatName
+                Name = chatName 
             };
 
             await _dbContext.Chats.AddAsync(chat);
@@ -59,6 +59,36 @@ namespace chat_backend.Modules.OnlineChat.Repositories
             }
 
             return chat;
+        }
+
+        public async Task<Chat?> GetChatInfoWithParticipantsAsync(int chatId)
+        {
+            return await _dbContext.Chats.Where(c => c.Id == chatId)
+                .Include(c => c.Participants)
+                    .ThenInclude(c => c.User)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Chat>> GetUserChatsWithParticipantsAsync(int userId)
+        {
+            return await _dbContext.Chats
+                .Where(c => c.Participants.Any(p => p.UserId == userId))
+                .Include(c => c.Participants)
+                    .ThenInclude(p => p.User)
+                .ToListAsync();
+        }
+
+        public async Task SetChatOwnerAsync(int chatId, int ownerId)
+        {
+            var chatParticipant = await _dbContext.ChatParticipants
+                .FirstOrDefaultAsync(c => c.UserId == ownerId && c.ChatId == chatId);
+
+            if (chatParticipant is null || chatParticipant.IsOwner) return;
+
+            chatParticipant.IsOwner = true;
+
+            _dbContext.ChatParticipants.Update(chatParticipant);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

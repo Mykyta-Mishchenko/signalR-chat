@@ -22,7 +22,8 @@ namespace chat_backend.Shared.Data.Configurations
 
             builder.HasOne(c=> c.User)
                 .WithMany(u => u.ChatParticipants)
-                .HasForeignKey(c => c.UserId);
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.ToTable("ChatParticipants");
         }

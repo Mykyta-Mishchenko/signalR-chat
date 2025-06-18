@@ -42,3 +42,19 @@
     text-shadow: 0 1px 0 #fff;
     opacity: .5;
 }
+.boxed-image {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+}
+.boxed-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }

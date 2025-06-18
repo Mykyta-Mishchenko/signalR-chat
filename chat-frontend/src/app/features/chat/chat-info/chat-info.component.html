@@ -1,0 +1,14 @@
+<div class="d-flex p-2 justify-content-between chat-info" (click)="onGoToChat()">
+    <div class="d-flex">
+        <div class="boxed-image">
+            <img src="empty-profile.png" >
+        </div>
+        <div class="d-flex flex-column">
+            <span class="chat-name">{{chat().name}}</span>
+            <span class="chat-last-message">{{chat().lastMessage}}</span>
+        </div>
+    </div>
+    <div class="new-messages" *ngIf="chat().unreadMessagesCount > 0">
+        {{chat().unreadMessagesCount}}
+    </div>
+</div>
