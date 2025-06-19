@@ -23,12 +23,12 @@ builder.Services.AddCors(opts =>
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials()
-            .WithOrigins("http://localhost:4200");
+            .WithOrigins("http://localhost:4200", "https://jolly-wave-058925903.6.azurestaticapps.net");
     });
 });
 
 builder.Services.AddControllers();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR().AddAzureSignalR();
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddAuthorization();
