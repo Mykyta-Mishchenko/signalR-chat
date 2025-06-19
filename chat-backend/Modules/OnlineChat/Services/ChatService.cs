@@ -44,12 +44,12 @@ namespace chat_backend.Modules.OnlineChat.Services
             return _mapper.Map<ChatInfoDto>(chat);
         }
 
-        public async Task<ChatInfoDto?> GetChatWithParticipantsAsync(int chatId)
+        public async Task<ChatInfoDto?> GetChatWithParticipantsAsync(int chatId, int userId)
         {
             var chatInfo = await _chatRepository.GetChatInfoWithParticipantsAsync(chatId);
             if(chatInfo != null)
             {
-                chatInfo.Name = GetChatName(chatInfo, chatId);
+                chatInfo.Name = GetChatName(chatInfo, userId);
             }
 
             return _mapper.Map<ChatInfoDto?>(chatInfo);

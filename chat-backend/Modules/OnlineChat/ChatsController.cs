@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace chat_backend.Modules.OnlineChat
 {
@@ -41,30 +42,6 @@ namespace chat_backend.Modules.OnlineChat
             return Ok(users);
         }
 
-        [HttpPost("new/personal")]
-        public async Task<IActionResult> CreatePersonalChat(CreatePersonalChatRequestDto request)
-        {
-            var newChat = new Chat
-            {
-                Name = "",
-                ChatType = ChatType.Personal
-            };
-
-            var chatInfo = await _chatService
-                .CreateChatWithParticipantsAsync(
-                    request.SenderId, newChat , 
-                    new List<int> { request.SenderId, request.RecipientId });
-
-            if(chatInfo is null)
-            {
-                return BadRequest("Can't create chat");
-            }
-            await _chatService.SetChatOwnerAsync(chatInfo.Id, request.SenderId);
-            await _chatService.SetChatOwnerAsync(chatInfo.Id, request.RecipientId);
-
-            return Ok(chatInfo);
-        }
-
         [HttpGet("messages/chat/{chatId:int}")]
         public async Task<IActionResult> GetChatMessages(int chatId)
         {
@@ -75,8 +52,15 @@ namespace chat_backend.Modules.OnlineChat
         [HttpGet("info/chat/{chatId:int}")]
         public async Task<IActionResult> GetChatInfo(int chatId)
         {
-            var chatInfo = await _chatService.GetChatWithParticipantsAsync(chatId);
-            return Ok(chatInfo);
+            var userNameIdentifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if(userNameIdentifier != null)
+            {
+                var userId = int.Parse(userNameIdentifier);
+                var chatInfo = await _chatService.GetChatWithParticipantsAsync(chatId, userId);
+                return Ok(chatInfo);
+            }   
+
+            return Unauthorized();
         }
     }
 }

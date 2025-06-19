@@ -83,7 +83,11 @@ export class ChatService {
   }
 
   selectChat(chatId: number) {
-    this.getChatInfo(chatId).subscribe();
+    this.getChatInfo(chatId).subscribe({
+      next: (chat) => {
+        this._selectedChat.set(chat);
+      }
+    });
     this.getChatMessages(chatId).subscribe();
   }
 
@@ -95,10 +99,7 @@ export class ChatService {
   }
 
   getChatInfo(chatId: number): Observable<ChatInfo> {
-    return this.httpClient.get<ChatInfo>(`${this.apiUrl}/chats/info/chat/${chatId}`, { withCredentials: true })
-      .pipe(tap(chat => {
-        this._selectedChat.set(chat);
-      }));
+    return this.httpClient.get<ChatInfo>(`${this.apiUrl}/chats/info/chat/${chatId}`, { withCredentials: true });
   }
 
   private registerEventHandlers(): void {
@@ -134,8 +135,12 @@ export class ChatService {
             { ...chat, unreadMessagesCount: --chat.unreadMessagesCount } : chat));
       })
 
-      this.hubConnection.on('NewChatCreated', (chat: ChatInfo) => {
-        this._chatList.update(chats => [chat, ...chats]);
+      this.hubConnection.on('NewChatCreated', (chatId: number) => {
+        this.getChatInfo(chatId).subscribe({
+          next: (chat => {
+            this._chatList.update(chats => [chat, ...chats]);
+          })
+        })
       })
     }
   }

@@ -98,7 +98,7 @@ namespace chat_backend.Modules.OnlineChat
                 }
             }
 
-            await Clients.Group(CHAT_PREFIX + chatInfo.Id).SendAsync("NewChatCreated", chatInfo);
+            await Clients.Group(CHAT_PREFIX + chatInfo.Id).SendAsync("NewChatCreated", chatInfo.Id);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)

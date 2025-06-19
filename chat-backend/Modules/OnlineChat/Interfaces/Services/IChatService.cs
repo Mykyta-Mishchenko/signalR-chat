@@ -8,7 +8,7 @@ namespace chat_backend.Modules.OnlineChat.Interfaces.Services
     {
         Task<List<Chat>> GetUserChatsAsync(int userId);
         Task<List<ChatInfoDto>> GetUserChatsWithParticipantsAsync(int userId);
-        Task<ChatInfoDto?> GetChatWithParticipantsAsync(int chatId);
+        Task<ChatInfoDto?> GetChatWithParticipantsAsync(int chatId, int userId);
         Task<ChatInfoDto?> CreateChatWithParticipantsAsync(int creatorId, Chat chat, List<int> participantsIds);
         Task SetChatOwnerAsync(int chatId, int ownerId);
         Task SetChatOwnersByChatTypeAsync(ChatInfoDto chat, int creatorId);

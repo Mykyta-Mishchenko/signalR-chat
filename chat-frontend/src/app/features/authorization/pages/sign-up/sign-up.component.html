@@ -56,7 +56,7 @@
                                     Please provide password.
                                 </div>
                                 <div *ngIf="form.controls.passwords.controls.password.hasError('pattern')" class="invalid-feedback">
-                                    Password must contain at least one lowercase letter, one uppercase letter, and one digit. It should be at least 8 characters long and contain only letters and digits.
+                                   Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one symbol (_ or -). Only letters, digits, _, and - are allowed.
                                 </div>
                             }
                     </div>
