@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://localhost:7020/api',
-    chatHubUrl: 'http://localhost:7020/chatHub'
+    apiUrl: 'https://chatapp-backend-1906-g5bbemhwfxb0gpcq.northeurope-01.azurewebsites.net/api',
+    chatHubUrl: 'https://chatapp-backend-1906-g5bbemhwfxb0gpcq.northeurope-01.azurewebsites.net/chatHub'
 }
