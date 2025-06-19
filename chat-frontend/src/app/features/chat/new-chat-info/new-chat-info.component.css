@@ -1,0 +1,25 @@
+.chat-name{
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+}
+.chat-info{
+    border-bottom: 1px solid #666666;
+}
+.chat-info:hover{
+    background-color: #CFD7DF;
+}
+
+.chat-new{
+    background-color: #CFD7DF;
+}
+.user-email{
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    font-weight: 400;
+    color: #666666;
+    font-size: 0.8rem;
+    max-width: 10rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

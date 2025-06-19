@@ -1,0 +1,58 @@
+@if(chat() == null){
+    <div class="no-content">
+        No chat selected yet.
+    </div>
+}
+@else {
+    <div class="d-flex chat-content flex-column justify-content-end align-items-center p-2">
+        <div class="d-flex text-center flex-column">
+            <h5>{{chat()?.name}}</h5>
+            <div class="chat-participants mt-0"> 
+                @for (participant of chat()?.participants; track participant.id) {
+                    {{participant.name+" "}}
+                }
+            </div>
+        </div>
+        @if(messages().length == 0){
+            <div class="no-content mb-5">
+                No chat messages yet.
+            </div>
+        }
+        
+        @if(hasUnreadMessages()){
+            <div class="unread-indicator" (click)="scrollToFirstUnread()">
+                <i class="bi bi-arrow-down"></i>
+                {{getUnreadCount()}} unread messages
+            </div>
+        }
+
+        <div class="chat-messages" #chatMessagesContainer>
+            @for (message of messages(); track message.timeStamp) {
+                <div class="message" 
+                    [class]="getMessageClass(message.senderId)"
+                    [id]="'message-' + message.id"
+                    inViewport
+                    (inViewportAction)="onMessageVisible($event, message)">
+                    <div>{{message.content}}</div>
+                    <div class="message-info">
+                        <i [class]="'emoji ' + getMessageSentiment(message)"></i>
+                        {{formatTimestamp(message.timeStamp)}}
+                        @if(message.isRead && isMessageMine(message)){<i class="bi bi-check-all"></i>}
+                        @else if(isMessageMine(message)) {<i class="bi bi-check"></i>}
+                    </div>
+                </div>
+            }
+        </div>  
+
+        <div class="input-group mt-2">
+            <input type="text" class="form-control" placeholder="Message" #chatMessage 
+                (keyup.enter)="onSendMessage(chatMessage.value); chatMessage.value=''">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" 
+                    (click)="onSendMessage(chatMessage.value); chatMessage.value=''" >
+                    <i class="bi bi-send"></i> Send
+                </button>
+            </div>
+        </div>
+    </div>
+}

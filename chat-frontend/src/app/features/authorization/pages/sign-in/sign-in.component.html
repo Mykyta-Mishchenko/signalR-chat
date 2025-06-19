@@ -1,0 +1,54 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <section class="col-lg-4 col-md-5 mt-5 col-sm-8">
+            <form class="boxed-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        class="form-control" 
+                        [class.is-valid]="emailIsValid"
+                        [class.is-invalid]="!emailIsValid && form.controls.email.touched"
+                        id="email"  
+                        formControlName="email">
+                    @if(!emailIsValid && form.controls.email.touched){
+                        <div *ngIf="form.controls.email.hasError('required')" class="invalid-feedback">
+                            Please provide email.
+                        </div>
+                        <div *ngIf="form.controls.email.hasError('email')" class="invalid-feedback">
+                            Enter correct email.
+                        </div>
+                    }
+                </div>
+                <div class="form-group mt-2">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        class="form-control"
+                        [class.is-valid]="passwordIsValid"
+                        [class.is-invalid]="!passwordIsValid && form.controls.password.touched"
+                        id="password"
+                        formControlName="password">
+                        @if((!passwordIsValid && form.controls.password.touched)){
+                            <div *ngIf="form.controls.password.hasError('required')" class="invalid-feedback">
+                                Please provide password.
+                            </div>
+                            <div *ngIf="form.controls.password.hasError('pattern')" class="invalid-feedback">
+                                Password must contain at least one lowercase letter, one uppercase letter, and one digit. It should be at least 8 characters long and contain only letters and digits.
+                            </div>
+                        }
+                </div>
+                <div class="form-row d-flex">
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-outline-success btn-shadow mt-2">Sign In</button>
+                        <div *ngIf="!isAuthorizationSucceeded" class="form-text text-muted red-message">Check your email or password</div>
+                    </div>
+                    <div class="col-6">
+                        <a type="submit" class="btn btn-outline-primary btn-shadow mt-2" routerLink="/auth/signUp">Sign Up</a>
+                        <label class="form-text text-muted">Or sign up if you don't have an account. </label>
+                    </div>    
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

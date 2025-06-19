@@ -1,0 +1,25 @@
+<div class="d-flex flex-column align-items-center">
+    <input type="text" class="form-control" placeholder="New group name" #groupName>
+    <select class="form-select mt-2" (change)="onAddFriend(selectedId)" #selectedId>
+        <option selected disabled value="">Select participants</option>
+        @for (friend of friends(); track friend.id) {
+            <option class="friends-selector" [value]="friend.id" [disabled]="isAlreadyInGroup(friend.id)">{{friend.name}}</option>
+        }
+    </select>
+
+    @for (participant of groupParticipants(); track participant.id) {
+        <div class="border border-secondary rounded w-100 mt-2 participant">
+            {{participant.name}}
+            <button class="btn btn-outline-danger close-button" 
+            [disabled]="isCreator(participant.id)" (click)="onDeleteFromGroup(participant.id)">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+    }
+
+    <button class="btn btn-outline-secondary w-100 mt-2" 
+        (click)="onGroupCreate(groupName.value)"
+        [disabled]="disableCreateGroup">
+        <i class="bi bi-plus-square"></i> Create group
+    </button>
+</div>

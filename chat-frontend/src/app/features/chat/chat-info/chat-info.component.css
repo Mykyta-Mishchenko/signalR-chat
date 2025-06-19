@@ -1,0 +1,61 @@
+.chat-name{
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+}
+.chat-last-message{
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    font-weight: 400;
+    color: #666666;
+    font-size: 0.9rem;
+    max-width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+.new-messages{
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: #58BD69;
+    border-radius: 50%;
+    text-align: center;
+    color: white;
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    font-weight: 700;
+}
+.chat-info{
+    border-bottom: 1px solid #666666;
+}
+
+.chat-info:hover{
+    background-color: #CFD7DF;
+}
+.connection-status{
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: -0.3rem;
+    right: 0.5rem;
+}
+.white-circle{
+    width: 0.6rem;
+    height: 0.6rem;
+    background-color: #ffffff;
+    border-radius: 50%;
+}
+.user-profile{
+    position: relative;
+}
+
+.online{
+    background-color: #58BD69;
+}
+
+.offline{
+    background-color: #fdae1c;
+}

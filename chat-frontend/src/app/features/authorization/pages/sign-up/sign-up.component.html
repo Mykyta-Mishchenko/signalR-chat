@@ -1,0 +1,96 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <section class="col-lg-5 col-md-6 mt-5 col-sm-8 col-xs-10 mt-5">
+            <form class="boxed-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="userName">User name</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        [class.is-valid]="userNameIsValid"
+                        [class.is-invalid]="!userNameIsValid && form.controls.userName.touched"
+                        id="userName" 
+                        formControlName="userName">
+                        @if(!userNameIsValid && form.controls.userName.touched){
+                            <div *ngIf="form.controls.userName.hasError('required')" class="invalid-feedback">
+                                Please provide first name.
+                            </div>
+                            <div *ngIf="form.controls.userName.hasError('pattern')" class="invalid-feedback">
+                                User name should starts with letter and can contain letters, numbers and symbol '_'. Be at least 4 characters long.
+                            </div>
+                        }
+                </div>
+                <div class="form-group mt-2">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        class="form-control" 
+                        [class.is-valid]="emailIsValid"
+                        [class.is-invalid]="!emailIsValid && form.controls.email.touched"
+                        id="email" 
+                        placeholder="example@gmail.com" 
+                        formControlName="email">
+                    @if(!emailIsValid && form.controls.email.touched){
+                        <div *ngIf="form.controls.email.hasError('required')" class="invalid-feedback">
+                            Please provide email.
+                        </div>
+                        <div *ngIf="form.controls.email.hasError('email')" class="invalid-feedback">
+                            Enter correct email.
+                        </div>
+                    }
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div formGroupName="passwords">
+                    <div class="form-group mt-2">
+                        <label for="password">Password</label>
+                        <input 
+                            type="password" 
+                            class="form-control"
+                            [class.is-valid]="passwordIsValid"
+                            [class.is-invalid]="!passwordIsValid && form.controls.passwords.touched"
+                            id="password" 
+                            placeholder="****************" 
+                            formControlName="password">
+                            @if((!passwordIsValid && form.controls.passwords.touched)){
+                                <div *ngIf="form.controls.passwords.controls.password.hasError('required')" class="invalid-feedback">
+                                    Please provide password.
+                                </div>
+                                <div *ngIf="form.controls.passwords.controls.password.hasError('pattern')" class="invalid-feedback">
+                                    Password must contain at least one lowercase letter, one uppercase letter, and one digit. It should be at least 8 characters long and contain only letters and digits.
+                                </div>
+                            }
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="passwordConfirmation">Password confirmation</label>
+                        <input 
+                            type="password" 
+                            class="form-control" 
+                            [class.is-valid]="confirmedPasswordIsValid"
+                            [class.is-invalid]="!confirmedPasswordIsValid && form.controls.passwords.touched"
+                            id="passwordConfirmation" 
+                            placeholder="****************"
+                            formControlName="confirmedPassword">
+                            @if((!confirmedPasswordIsValid && form.controls.passwords.touched)){
+                                <div *ngIf="form.controls.passwords.controls.confirmedPassword.hasError('required')" class="invalid-feedback">
+                                    Please provide password confirmation.
+                                </div>
+                                <div *ngIf="form.controls.passwords.hasError('passwordsNotEqual') && 
+                                            form.controls.passwords.controls.confirmedPassword.dirty" class="invalid-feedback">
+                                    Passwords must be equal.
+                                </div>
+                            }
+                    </div>
+                </div> 
+                <div class="form-row d-flex">
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-outline-success btn-shadow mt-2">Sign Up</button>
+                    </div>
+                    <div class="col">
+                        <a type="submit" class="btn btn-outline-primary btn-shadow mt-2" routerLink="/auth/signIn">Sign In</a>
+                        <label class="form-text text-muted">Or sign in if you already have an account. </label>
+                    </div>    
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
