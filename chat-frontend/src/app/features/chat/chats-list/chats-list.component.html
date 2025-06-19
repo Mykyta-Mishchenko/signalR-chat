@@ -1,6 +1,7 @@
 <div class="d-flex flex-column">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Recipient's username/email" #userFindInput>
+        <input type="text" class="form-control" placeholder="Recipient's username/email" 
+        #userFindInput (keyup.enter)="onFindUser(userFindInput.value)">
         <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" (click)="onFindUser(userFindInput.value)">
                 <i class="bi bi-search"></i> Find

@@ -17,7 +17,9 @@
         </div>
     }
 
-    <button class="btn btn-outline-secondary w-100 mt-2" (click)="onGroupCreate(groupName.value)">
+    <button class="btn btn-outline-secondary w-100 mt-2" 
+        (click)="onGroupCreate(groupName.value)"
+        [disabled]="disableCreateGroup">
         <i class="bi bi-plus-square"></i> Create group
     </button>
 </div>

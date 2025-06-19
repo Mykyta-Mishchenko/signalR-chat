@@ -4,6 +4,7 @@ import { SendMessageDto } from '../dto/send-message.dto';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { InViewportModule } from 'ng-in-viewport';
 import { ChatMessage } from '../models/chat-message.model';
+import { TextSentiment } from '../models/text-sentiment.enum';
 
 @Component({
   selector: 'app-chat-content',
@@ -238,5 +239,18 @@ export class ChatContentComponent implements AfterViewInit, OnDestroy {
 
   isMessageUnread(message: ChatMessage) {
     return !message.isRead && message.senderId != this.currentUserId;
+  }
+
+  getMessageSentiment(message: ChatMessage) {
+    switch (message.sentiment) {
+      case TextSentiment.Positive:
+        return 'bi bi-emoji-smile';
+      case TextSentiment.Neutral:
+        return 'bi bi-emoji-neutral';
+      case TextSentiment.Negative:
+        return 'bi bi-emoji-angry';
+      default:
+        return 'bi bi-question';
+    }
   }
 }

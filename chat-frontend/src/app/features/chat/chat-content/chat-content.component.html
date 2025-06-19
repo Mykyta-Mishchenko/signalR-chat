@@ -34,10 +34,11 @@
                     inViewport
                     (inViewportAction)="onMessageVisible($event, message)">
                     <div>{{message.content}}</div>
-                    <div class="message-time">
+                    <div class="message-info">
+                        <i [class]="'emoji ' + getMessageSentiment(message)"></i>
+                        {{formatTimestamp(message.timeStamp)}}
                         @if(message.isRead && isMessageMine(message)){<i class="bi bi-check-all"></i>}
                         @else if(isMessageMine(message)) {<i class="bi bi-check"></i>}
-                        {{formatTimestamp(message.timeStamp)}}
                     </div>
                 </div>
             }

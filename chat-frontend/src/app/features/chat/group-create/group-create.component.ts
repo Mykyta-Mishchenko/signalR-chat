@@ -58,4 +58,8 @@ export class GroupCreateComponent {
   isCreator(userId: number): boolean {
     return userId == this.authService.User()?.userId;
   }
+
+  get disableCreateGroup(): boolean {
+    return this.groupParticipants().length <= 2;
+  }
 }

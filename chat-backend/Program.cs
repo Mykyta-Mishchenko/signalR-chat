@@ -1,3 +1,5 @@
+using Azure.AI.TextAnalytics;
+using Azure;
 using chat_backend.AppExtensionMethods;
 using chat_backend.Modules.OnlineChat;
 using chat_backend.Shared.Data;
@@ -9,7 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ChatDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure());
 });
 
 builder.Services.AddCors(opts =>
@@ -36,6 +39,14 @@ builder.Services.AddValidators();
 builder.Services.AddApplicationMappers();
 
 builder.Services.AddSingleton<IUserIdProvider, NameIdentifierUserIdProvider>();
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var config = serviceProvider.GetRequiredService<IConfiguration>();
+    var credential = new AzureKeyCredential(config["TextAnalytics:Key"]);
+    var endpoint = new Uri(config["TextAnalytics:Endpoint"]);
+
+    return new TextAnalyticsClient(endpoint, credential);
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

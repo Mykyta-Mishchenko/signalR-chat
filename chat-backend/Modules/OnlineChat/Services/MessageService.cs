@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.AI.TextAnalytics;
 using chat_backend.Modules.OnlineChat.DTOs;
 using chat_backend.Modules.OnlineChat.Interfaces.Repositories;
 using chat_backend.Modules.OnlineChat.Interfaces.Services;
@@ -21,13 +22,19 @@ namespace chat_backend.Modules.OnlineChat.Services
 
         public async Task<ChatMessageDto?> CreateMessageAsync(SendMessageDto sendedMessage)
         {
-            var message = new Message
-            {
-                ChatId = sendedMessage.ChatId,
-                SenderId = sendedMessage.SenderId,
-                Content = sendedMessage.Content,
-                TimeStamp = DateTime.Now
-            };
+            var message = _mapper.Map<Message>(sendedMessage);
+            message.TimeStamp = DateTime.Now;
+
+            var dbMessage = await _messageRepository.CreateMessageAsync(message);
+
+            return _mapper.Map<ChatMessageDto?>(dbMessage);
+        }
+
+        public async Task<ChatMessageDto?> CreateMessageWithSentimentAsync(SendMessageDto sendedMessage, TextSentiment sentiment)
+        {
+            var message = _mapper.Map<Message>(sendedMessage);
+            message.TimeStamp = DateTime.Now;
+            message.Sentiment = sentiment;
 
             var dbMessage = await _messageRepository.CreateMessageAsync(message);
 

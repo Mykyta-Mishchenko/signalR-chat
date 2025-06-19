@@ -17,6 +17,7 @@ namespace monopoly_backend.AppExtensionMethods
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IChatUserService, ChatUserService>();
             services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<SentimentService>();
         }
     }
 }

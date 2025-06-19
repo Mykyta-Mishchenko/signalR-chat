@@ -45,14 +45,7 @@ namespace chat_backend.AppExtensionMethods
                         }
 
                         return Task.CompletedTask;
-                    },
-                     OnAuthenticationFailed = context =>
-                     {
-                         var token = context.Request.Headers["Authorization"];
-                         Console.WriteLine(token);
-                         Console.WriteLine("Authentication failed: " + context.Exception.Message);
-                         return Task.CompletedTask;
-                     }
+                    }
                 };
             });
 

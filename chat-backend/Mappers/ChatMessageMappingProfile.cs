@@ -9,6 +9,7 @@ namespace chat_backend.Mappers
         public ChatMessageMappingProfile() 
         {
             CreateMap<Message, ChatMessageDto>();
+            CreateMap<SendMessageDto, Message>();
         }
     }
 }

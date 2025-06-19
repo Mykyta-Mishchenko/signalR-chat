@@ -1,5 +1,6 @@
 ﻿using chat_backend.Modules.OnlineChat.DTOs;
 using chat_backend.Modules.OnlineChat.Interfaces.Services;
+using chat_backend.Modules.OnlineChat.Services;
 using chat_backend.Shared.Data.DataModels;
 using chat_backend.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -14,15 +15,18 @@ namespace chat_backend.Modules.OnlineChat
         private readonly IChatService _chatService;
         private readonly IChatUserService _chatUserService;
         private readonly IMessageService _messageService;
+        private readonly SentimentService _sentimentService;
         private readonly string CHAT_PREFIX = "Chat_";
         public ChatsHub(
             IChatService chatService, 
             IMessageService messageService,
+            SentimentService speakimentService,
             IChatUserService chatUserService)
         {
             _chatService = chatService;
             _messageService = messageService;
             _chatUserService = chatUserService;
+            _sentimentService = speakimentService;
         }
         public async override Task OnConnectedAsync()
         {
@@ -49,7 +53,8 @@ namespace chat_backend.Modules.OnlineChat
 
         public async Task SendMessageToChat(SendMessageDto message)
         {
-            var dbMessage = await _messageService.CreateMessageAsync(message);
+            var sentiment = await _sentimentService.AnalyzeSentimentAsync(message.Content);
+            var dbMessage = await _messageService.CreateMessageWithSentimentAsync(message, sentiment);
 
             if(dbMessage != null)
             {
