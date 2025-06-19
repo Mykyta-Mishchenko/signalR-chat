@@ -13,6 +13,7 @@ namespace chat_backend.Shared.Data.DataModels
 
         public DateTime LastSeenAt { get; set; }
         public bool IsOnline { get; set; }
+        public string ConnectionId { get; set; }
 
         public UserProfile UserProfile { get; set; }
         public ICollection<UserRoles> UserRoles { get; set; }

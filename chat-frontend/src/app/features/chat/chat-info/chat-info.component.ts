@@ -26,4 +26,8 @@ export class ChatInfoComponent {
     return this.chat().chatType == ChatType.Personal &&
       this.chat().participants.find(p => p.id != this.userId && p.isOnline) != undefined;
   }
+
+  get isPersonal() {
+    return this.chat().chatType == ChatType.Personal;
+  }
 }

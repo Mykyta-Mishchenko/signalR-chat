@@ -47,6 +47,10 @@ namespace chat_backend.Modules.OnlineChat.Services
         public async Task<ChatInfoDto?> GetChatWithParticipantsAsync(int chatId)
         {
             var chatInfo = await _chatRepository.GetChatInfoWithParticipantsAsync(chatId);
+            if(chatInfo != null)
+            {
+                chatInfo.Name = GetChatName(chatInfo, chatId);
+            }
 
             return _mapper.Map<ChatInfoDto?>(chatInfo);
         }
@@ -88,11 +92,26 @@ namespace chat_backend.Modules.OnlineChat.Services
             await _chatRepository.SetChatOwnerAsync(chatId, ownerId);
         }
 
+        public async Task SetChatOwnersByChatTypeAsync(ChatInfoDto chat, int creatorId)
+        {
+            if (chat.ChatType == ChatType.Personal)
+            {
+                foreach (var participant in chat.Participants)
+                {
+                    await SetChatOwnerAsync(chat.Id, participant.Id);
+                }
+            }
+            else
+            {
+                await SetChatOwnerAsync(chat.Id, creatorId);
+            }
+        }
+
         private string GetChatName(Chat chatWithParticipants, int userId)
         {
             if(chatWithParticipants.ChatType == ChatType.Personal)
             {
-                return chatWithParticipants.Participants.FirstOrDefault(p => p.Id != userId)?.User.UserName ?? "";
+                return chatWithParticipants.Participants.FirstOrDefault(p => p.UserId != userId)?.User.UserName ?? "";
             }
 
             if (string.IsNullOrEmpty(chatWithParticipants.Name))

@@ -10,6 +10,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ChatType } from '../models/chat-type.enum';
 import { SendMessageDto } from '../dto/send-message.dto';
 import { ChatFriend } from '../models/chat-friend.model';
+import { NewChatDto } from '../dto/new-chat.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +66,7 @@ export class ChatService {
     }
   }
 
-  geCurrentUserChats() : Observable<ChatInfo[]> {
+  getCurrentUserChats() : Observable<ChatInfo[]> {
     if (this.currentUser()) {
       return this.httpClient
         .get<ChatInfo[]>(`${this.apiUrl}/chats/user/${this.currentUser()!.userId}`, { withCredentials: true })
@@ -79,19 +80,6 @@ export class ChatService {
 
   getUserByNameOrEmail(request: string) : Observable<ChatParticipant[]> {
     return this.httpClient.get<ChatParticipant[]>(`${this.apiUrl}/chats/find/user/${request}`, { withCredentials: true });
-  }
-
-  createPersonalChat(userId: number): Observable<ChatInfo> {
-    if (this.currentUser()) {
-      return this.httpClient.post<ChatInfo>(`${this.apiUrl}/chats/new/personal`,
-        { senderId: Number(this.currentUser()!.userId), recipientId: userId },
-        { withCredentials: true })
-        .pipe(tap(chat => {
-          this._chatList.update(chats => [chat, ...chats]);
-        }));
-    }
-
-    return throwError(() => new Error('User not authenticated'));
   }
 
   selectChat(chatId: number) {
@@ -125,6 +113,9 @@ export class ChatService {
       });
 
       this.hubConnection.on('GetChatMessage', (message: ChatMessage) => {
+        console.log(message);
+        console.log(this._selectedChat()?.id)
+        console.log(message.chatId);
         if (message.chatId == this._selectedChat()?.id) {
           this._chatMessages.update(messages => [...messages, message]);
         }
@@ -141,6 +132,10 @@ export class ChatService {
           chats.map(chat => chat.id == message.chatId &&
             chat.unreadMessagesCount > 0 ?
             { ...chat, unreadMessagesCount: --chat.unreadMessagesCount } : chat));
+      })
+
+      this.hubConnection.on('NewChatCreated', (chat: ChatInfo) => {
+        this._chatList.update(chats => [chat, ...chats]);
       })
     }
   }
@@ -166,6 +161,10 @@ export class ChatService {
     this.invokeHubMethod("ReadChatMessage", messageId);
   }
 
+  createNewChat(chat: NewChatDto) {
+    this.invokeHubMethod("CreateNewChat", chat);
+  }
+
   private isConnected(): boolean {
     return this.hubConnection?.state === 'Connected';
   }
@@ -181,16 +180,14 @@ export class ChatService {
   }
 
   private addNewMessageToChatList(message: ChatMessage) {
-    this._chatList.update(chats =>
-      chats.map(chat => {
-        return chat.id == message.chatId ?
-          {
-            ...chat,
-            lastMessage: message.content,
-            lastMessageTimestamp: message.timeStamp,
-            unreadMessagesCount: ++chat.unreadMessagesCount
-          } : chat
-      }));
+    const chat = this._chatList().find(c => c.id == message.chatId);
+    if (chat) {
+      chat.lastMessage = message.content;
+      chat.lastMessageTimestamp = message.timeStamp;
+      chat.unreadMessagesCount = ++chat.unreadMessagesCount;
+
+      this._chatList.update(chats => [chat, ...chats.filter(c => c.id != message.chatId)]);
+    }
   }
 
 }

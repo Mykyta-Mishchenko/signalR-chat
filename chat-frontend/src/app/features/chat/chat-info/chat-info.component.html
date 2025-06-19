@@ -4,9 +4,11 @@
             <div class="boxed-image">
                 <img src="empty-profile.png" >
             </div>
-            <div class="connection-status" [class.online]="isOnline" [class.offline]="!isOnline">
-                <div class="white-circle"></div>
-            </div>
+            @if(isPersonal){
+                <div class="connection-status" [class.online]="isOnline" [class.offline]="!isOnline">
+                    <div class="white-circle"></div>
+                </div>
+            }
         </div>
         <div class="d-flex flex-column">
             <span class="chat-name">{{chat().name}}</span>

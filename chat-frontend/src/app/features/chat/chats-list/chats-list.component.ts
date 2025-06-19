@@ -20,7 +20,7 @@ export class ChatsListComponent implements OnInit{
   foundedUsers = signal<ChatParticipant[]>([]);
 
   ngOnInit(): void {
-    this.chatService.geCurrentUserChats().subscribe();
+    this.chatService.getCurrentUserChats().subscribe();
   }
 
   onFindUser(request: string) {

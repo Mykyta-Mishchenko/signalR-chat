@@ -66,7 +66,7 @@ namespace chat_backend.Modules.OnlineChat.Repositories
 
         public async Task<List<Chat>> GetUserChatsAsync(int userId)
         {
-            return await _dbContext.Chats.Where(c => c.Participants.Any(p => p.Id == userId)).ToListAsync();
+            return await _dbContext.Chats.Where(c => c.Participants.Any(p => p.UserId == userId)).ToListAsync();
         }
 
         public async Task<List<Chat>> GetUserChatsWithParticipantsAsync(int userId)

@@ -32,7 +32,7 @@ namespace chat_backend.Modules.OnlineChat
                 var userId = int.Parse(userIdentifier);
                 var userChats = await _chatService.GetUserChatsAsync(userId);
 
-                await _chatUserService.SetUserOnlineAsync(userId);
+                await _chatUserService.SetUserOnlineAsync(userId, Context.ConnectionId);
 
                 foreach (var chat in userChats)
                 {
@@ -57,7 +57,7 @@ namespace chat_backend.Modules.OnlineChat
             }
         }
 
-        public  async Task ReadChatMessage(int messageId)
+        public async Task ReadChatMessage(int messageId)
         {
             var message = await _messageService.SetMessageAsReadAsync(messageId);
 
@@ -65,6 +65,35 @@ namespace chat_backend.Modules.OnlineChat
             {
                 await Clients.Group(CHAT_PREFIX + message.ChatId).SendAsync("MessageRead", message);
             }
+        }
+
+        public async Task CreateNewChat(NewChatDto newChat)
+        {
+            var chat = new Chat
+            {
+                Name = newChat.Name,
+                ChatType = newChat.ChatType
+            };
+            var participantsIds = newChat.Participants.Select(x => x.Id).ToList();
+
+            var chatInfo = await _chatService.CreateChatWithParticipantsAsync(newChat.CreatorId, chat, participantsIds);
+            if(chatInfo is null)
+            {
+                return;
+            }
+
+            await _chatService.SetChatOwnersByChatTypeAsync(chatInfo, newChat.CreatorId);
+
+            var participantsConnections = await _chatUserService.GetChatUsersConnectionAsync(chatInfo.Id);
+            foreach(var participant in participantsConnections)
+            {
+                if(!string.IsNullOrEmpty(participant.ConnectionId))
+                {
+                    await Groups.AddToGroupAsync(participant.ConnectionId, CHAT_PREFIX + chatInfo.Id);
+                }
+            }
+
+            await Clients.Group(CHAT_PREFIX + chatInfo.Id).SendAsync("NewChatCreated", chatInfo);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)

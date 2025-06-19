@@ -2,6 +2,7 @@
 using chat_backend.Modules.OnlineChat.DTOs;
 using chat_backend.Modules.OnlineChat.Interfaces.Repositories;
 using chat_backend.Modules.OnlineChat.Interfaces.Services;
+using chat_backend.Modules.OnlineChat.Models;
 using chat_backend.Shared.Data.DataModels;
 
 namespace chat_backend.Modules.OnlineChat.Services
@@ -21,6 +22,13 @@ namespace chat_backend.Modules.OnlineChat.Services
             _mapper = mapper;
         }
 
+        public async Task<List<UserConnection>> GetChatUsersConnectionAsync(int chatId)
+        {
+            var users =  await _userRepository.GetChatUsersAsync(chatId);
+
+            return _mapper.Map<List<UserConnection>>(users);
+        }
+
         public async Task<User?> GetUserByIdAsync(int userId)
         {
             return await _userRepository.GetUserByIdAsync(userId);
@@ -37,9 +45,9 @@ namespace chat_backend.Modules.OnlineChat.Services
             await _onlineUsersRepository.SetUserOfflineAsync(userId);
         }
 
-        public async Task SetUserOnlineAsync(int userId)
+        public async Task SetUserOnlineAsync(int userId, string connectionId)
         {
-            await _onlineUsersRepository.SetUserOnlineAsync(userId);
+            await _onlineUsersRepository.SetUserOnlineAsync(userId, connectionId);
         }
     }
 }

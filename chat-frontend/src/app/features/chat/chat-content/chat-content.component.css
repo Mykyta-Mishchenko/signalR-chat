@@ -125,3 +125,8 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+.chat-participants{
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    font-weight: 400;
+    color: #666666;
+}

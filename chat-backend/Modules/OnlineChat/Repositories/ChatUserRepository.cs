@@ -21,5 +21,12 @@ namespace chat_backend.Modules.OnlineChat.Repositories
         {
             return await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
+
+        public async Task<List<User>> GetChatUsersAsync(int chatId)
+        {
+            return await _dbContext.Users
+                .Where(u => u.ChatParticipants.Any(p => p.ChatId == chatId))
+                .ToListAsync();
+        }
     }
 }

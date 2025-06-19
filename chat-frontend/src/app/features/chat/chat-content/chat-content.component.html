@@ -5,8 +5,13 @@
 }
 @else {
     <div class="d-flex chat-content flex-column justify-content-end align-items-center p-2">
-        <div class="d-flex text-center">
+        <div class="d-flex text-center flex-column">
             <h5>{{chat()?.name}}</h5>
+            <div class="chat-participants mt-0"> 
+                @for (participant of chat()?.participants; track participant.id) {
+                    {{participant.name+" "}}
+                }
+            </div>
         </div>
         @if(messages().length == 0){
             <div class="no-content mb-5">
@@ -28,13 +33,6 @@
                     [id]="'message-' + message.id"
                     inViewport
                     (inViewportAction)="onMessageVisible($event, message)">
-                    
-                    @if(isFirstUnreadMessage(message)){
-                        <div class="unread-separator">
-                            <span>New messages</span>
-                        </div>
-                    }
-                    
                     <div>{{message.content}}</div>
                     <div class="message-time">
                         @if(message.isRead && isMessageMine(message)){<i class="bi bi-check-all"></i>}

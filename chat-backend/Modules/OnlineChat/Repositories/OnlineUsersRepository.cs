@@ -2,6 +2,7 @@
 using chat_backend.Shared.Data;
 using chat_backend.Shared.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace chat_backend.Modules.OnlineChat.Repositories
 {
@@ -26,15 +27,17 @@ namespace chat_backend.Modules.OnlineChat.Repositories
 
             user.IsOnline = false;
             user.LastSeenAt = DateTime.Now;
+            user.ConnectionId = "";
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task SetUserOnlineAsync(int userId)
+        public async Task SetUserOnlineAsync(int userId, string connectionId)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserId == userId);
             if (user is null) return;
 
             user.IsOnline = true;
+            user.ConnectionId = connectionId;
             await _dbContext.SaveChangesAsync();
         }
     }

@@ -8,6 +8,8 @@ namespace chat_backend.AppExtensionMethods
         {
             services.AddAutoMapper(typeof(UserMappingProfile));
             services.AddAutoMapper(typeof(ChatMappingProfile));
+            services.AddAutoMapper(typeof(UserConnectionMappingProfile));
+            services.AddAutoMapper(typeof(ChatMessageMappingProfile));
         }
     }
 }

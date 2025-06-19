@@ -6,5 +6,6 @@ namespace chat_backend.Modules.OnlineChat.Interfaces.Repositories
     {
         Task<List<User>> GetUsersByNameOrEmail(string request);
         Task<User?> GetUserByIdAsync(int userId);
+        Task<List<User>> GetChatUsersAsync(int chatId);
     }
 }
