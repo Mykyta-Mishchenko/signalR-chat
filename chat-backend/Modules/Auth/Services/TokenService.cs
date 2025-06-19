@@ -38,8 +38,8 @@ namespace chat_backend.Modules.Auth.Services
             httpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false,
-                SameSite = SameSiteMode.Strict,
+                Secure = true,
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddDays(RefreshTokenExpirationDays)
             });
         }

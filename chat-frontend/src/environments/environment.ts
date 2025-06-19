@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:5115/api',
-    chatHubUrl: 'http://localhost:5115/chatHub'
+    apiUrl: 'https://localhost:7020/api',
+    chatHubUrl: 'https://localhost:7020/chatHub'
 }
