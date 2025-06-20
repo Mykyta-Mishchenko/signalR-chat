@@ -42,3 +42,9 @@ To provide a smooth chat experience, the following components were used:
 * ChatsController — retrieves data directly from the database during initial load or when creating new chats (to supplement real-time features)
 * ChatHub — manages real-time chat communication via SignalR
 
+**Test user info:**
+
+gmail: example@gmail.com
+
+password: examplE12_
+
