@@ -27,6 +27,15 @@ namespace chat_backend.Modules.OnlineChat.Services
 
         public async Task<ChatInfoDto?> CreateChatWithParticipantsAsync(int creatorId, Chat chat, List<int> participantsIds)
         {
+            if(chat.ChatType == ChatType.Personal)
+            {
+                var oldChat = await _chatRepository.GetPersonalChatByParticipantsAsync(participantsIds);
+                if(oldChat != null)
+                {
+                    return null;
+                }
+            }
+
             var dbChat = await _chatRepository.CreateChatWithParticipantsAsync(chat, participantsIds);
             if(dbChat is null)
             {

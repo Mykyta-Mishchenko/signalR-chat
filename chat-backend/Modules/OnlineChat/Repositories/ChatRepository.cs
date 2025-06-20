@@ -1,6 +1,7 @@
 ﻿using chat_backend.Modules.OnlineChat.Interfaces.Repositories;
 using chat_backend.Shared.Data;
 using chat_backend.Shared.Data.DataModels;
+using chat_backend.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace chat_backend.Modules.OnlineChat.Repositories
@@ -64,6 +65,26 @@ namespace chat_backend.Modules.OnlineChat.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<Chat?> GetPersonalChatByParticipantsAsync(List<int> participantsIds)
+        {
+            var potentialChats = await _dbContext.Chats
+                .Where(c => c.ChatType == ChatType.Personal && c.Participants.Count == participantsIds.Count)
+                .Include(c => c.Participants)
+                .ToListAsync();
+
+            foreach (var existingChat in potentialChats)
+            {
+                var existingParticipantIds = existingChat.Participants.Select(p => p.Id).OrderBy(id => id);
+                var newParticipantIds = participantsIds.OrderBy(id => id);
+
+                if (existingParticipantIds.SequenceEqual(newParticipantIds))
+                {
+                    return existingChat;
+                }
+            }
+            return null;
+        }
+
         public async Task<List<Chat>> GetUserChatsAsync(int userId)
         {
             return await _dbContext.Chats.Where(c => c.Participants.Any(p => p.UserId == userId)).ToListAsync();
@@ -90,5 +111,6 @@ namespace chat_backend.Modules.OnlineChat.Repositories
             _dbContext.ChatParticipants.Update(chatParticipant);
             await _dbContext.SaveChangesAsync();
         }
+
     }
 }
