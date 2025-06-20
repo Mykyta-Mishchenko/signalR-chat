@@ -28,7 +28,7 @@ builder.Services.AddCors(opts =>
 });
 
 builder.Services.AddControllers();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR().AddAzureSignalR();
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddAuthorization();
