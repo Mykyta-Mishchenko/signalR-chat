@@ -82,6 +82,11 @@ export class ChatService {
     return this.httpClient.get<ChatParticipant[]>(`${this.apiUrl}/chats/find/user/${request}`, { withCredentials: true });
   }
 
+  clearSelectedChat() {
+    this._selectedChat.set(null);
+    this._chatMessages.set([]);
+  }
+
   selectChat(chatId: number) {
     this.getChatInfo(chatId).subscribe({
       next: (chat) => {

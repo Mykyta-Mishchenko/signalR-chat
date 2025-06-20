@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from '../services/chat.service';
 import { SendMessageDto } from '../dto/send-message.dto';
 import { AuthService } from '../../../core/services/auth/auth.service';
@@ -13,7 +13,7 @@ import { TextSentiment } from '../models/text-sentiment.enum';
   templateUrl: './chat-content.component.html',
   styleUrl: './chat-content.component.css'
 })
-export class ChatContentComponent implements AfterViewInit, OnDestroy {
+export class ChatContentComponent implements AfterViewInit, OnDestroy, OnInit{
   @ViewChild('chatMessagesContainer') chatMessagesContainer!: ElementRef<HTMLDivElement>;
   
   // Your existing properties...
@@ -78,6 +78,10 @@ export class ChatContentComponent implements AfterViewInit, OnDestroy {
         this.handleAutoScroll();
       }
     }, 100);
+  }
+
+  ngOnInit(): void {
+    this.chatService.clearSelectedChat();
   }
 
   // Add this new method to handle initial scroll more reliably

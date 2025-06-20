@@ -18,7 +18,7 @@
     font-weight: 400;
     color: #666666;
     font-size: 0.8rem;
-    max-width: 10rem;
+    max-width:max-content;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
